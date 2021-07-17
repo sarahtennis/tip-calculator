@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap');
+:root {
+  --mobile: 375px;
+  --desktop: 1440px;
+  --primaryColor: #26c0ab;
+  --color1: #00494d;
+  --color2: #5e7a7d;
+  --color3: #7f9c9f;
+  --lightTeal: #c5e4e7;
+  --color5: #f4fafa;
+  --white: #ffffff;
+
+  --mainBgColor: var(--lightTeal);
+
+  --fontSizeFormInputs: 24px;
+
+  --font-family: 'Space Mono', sans-serif;
+
+  --fontWeightRegular: 400;
+  --fontWeightBold: 700;
+}
+
+body {
+  background-color: var(--mainBgColor);
+  font-family: var(--font-family);
+}
+
+.tip-container .selected {
+  background: blue;
+}
