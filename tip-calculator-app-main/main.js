@@ -10,7 +10,6 @@ class Calculator {
   }
 
   calculate = (thingy) => {
-    console.log(thingy);
     this.total.setCalculations(thingy);
   }
 }
@@ -32,7 +31,6 @@ class Bill {
   validInput() {
     const value = parseFloat(this.input.value);
     if (value) {
-      console.log('valid');
     } else if (value === 0) {
       this.validationMessage = 'Cannot be 0';
     } else {
@@ -64,12 +62,23 @@ class TipPercent {
         this.calculate({ tip: value });
       });
     });
+
+    this.input.addEventListener('beforeinput', (e) => {
+      if (!parseInt(e.data) && e.data !== null && e.data != '0') {
+        e.preventDefault();
+      }
+    });
+
+    this.input.addEventListener('input', () => {
+      if (this.input.value.length > 0) {
+        this.calculate({ tip: this.input.value });
+      }
+    });
   }
 }
 
 class Total {
   constructor(calculations) {
-    console.log(calculations);
     this.calculations = calculations;
     this.perPerson = document.querySelector('#per-person');
     this.total = document.querySelector('#total');
@@ -82,8 +91,7 @@ class Total {
   }
 
   updateValues() {
-    console.log(this.calculations);
-    this.perPerson.innerText = parseFloat(this.calculations.bill) * parseFloat(this.calculations.tip);
+    this.perPerson.innerText = parseFloat(this.calculations.bill) * parseFloat(this.calculations.tip) / 100;
   }
 }
 
