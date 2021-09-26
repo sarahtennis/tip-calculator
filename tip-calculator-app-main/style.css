@@ -7,8 +7,11 @@
   --color1: #00494d;
   --color2: #5e7a7d;
   --color3: #7f9c9f;
+  --inputIconColor: #9EBBBD;
+  --inputBgColor: #F3F9FA;
   --lightTeal: #c5e4e7;
   --color5: #f4fafa;
+  --errorRed: #E17457;
   --white: #ffffff;
   --mainBgColor: var(--lightTeal);
   --fontSizeFormInputs: 24px;
@@ -19,42 +22,198 @@
 
 *, *:before, *:after {
   box-sizing: border-box;
-}
-
-body {
-  background-color: var(--mainBgColor);
   font-family: var(--font-family);
 }
 
-.calculator-container {
+body {
+  height: 100vh;
+  background-color: var(--mainBgColor);
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+label {
+  display: block;
+  font-size: 16px;
+  font-weight: bold;
+  color: var(--color2);
+}
+
+input[type="text"] {
+  background: var(--inputBgColor);
+  border: 2px solid var(--inputBgColor);
+  color: var(--rightGreen);
+  height: 48px;
+  width: 100%;
+  border-radius: 5px;
+  padding: 16px;
+  font-size: 24px;
+  text-align: right;
+  position: relative;
+}
+
+input[type="text"]:focus {
+  border: 2px solid var(--primaryColor);
+  outline: none;
+}
+
+#bill.icon-input {
+  padding-left: 40px;
+}
+
+#people.icon-input {
+  padding-left: 45px;
+}
+
+input.invalid-input {
+  border: 2px solid var(--errorRed);
+}
+
+.bill-input-wrapper, .tip-container {
+  margin-bottom: 40px;
+}
+
+.bill-input-wrapper, .people-input-wrapper {
+  position: relative;
+}
+
+.bill-input-wrapper:before {
+  content: '';
+  position: absolute;
+  top: calc(50% - 12px);
+  left: 12px;
+  width: 16px;
+  height: 24px;
+  z-index: 10;
+  background-image: url('./images/icon-dollar.svg');
+  background-size: cover;
+  user-select: none;
+  pointer-events: none;
+}
+
+.people-input-wrapper:before {
+  content: '';
+  position: absolute;
+  top: calc(50% - 12px);
+  height: 24px;
+  width: 21px;
+  left: 12px;
+  z-index: 10;
+  background-image: url('./images//icon-person.svg');
+  background-size: cover;
+  user-select: none;
+  pointer-events: none;
+}
+
+.validation {
+  color: var(--errorRed);
+}
+
+img.logo {
+  height: 50px;
+  width: auto;
+  margin-bottom: 80px;
+}
+
+.calculator-container {
+  width: 100%;
+  display: grid;
+  grid-template-columns: calc(50% - 16px) calc(50% - 16px);
+  grid-template-rows: auto;
+  grid-column-gap: 32px;
   background-color: var(--white);
   border-radius: 25px;
   padding: 32px;
+  max-width: 920px;
+  box-shadow: 0px 32px 43px rgba(79, 166, 175, 0.200735);
+}
+
+.label-line {
+  display: flex;
+  justify-content: space-between;
+}
+
+.label-line label {
+  line-height: 24px;
+  margin-bottom: 6px;
 }
 
 .tip-container {
   display: grid;
-  grid-template-rows: auto auto;
+  grid-template-rows: 1fr 1fr;
   grid-template-columns: 1fr 1fr 1fr;
+  grid-row-gap: 16px;
+  grid-column-gap: 16px;
 }
 
-.tip-container .selected {
-  background: blue;
+.tip-container button {
+  border: none;
+  background: var(--rightGreen);
+  color: var(--white);
+  font-weight: bold;
+  font-size: 24px;
+  line-height: 36px;
+  border-radius: 5px;
+  height: 48px;
+}
+
+.tip-container button.selected {
+  background: var(--primaryColor);
+  color: var(--rightGreen);
+}
+
+.tip-container input.tip-option {
+  font-family: var(--font-family);
+  max-height: 48px;
+  font-weight: bold;
+}
+
+.tip-container input.tip-option.active {
+  background: var(--primaryColor);
 }
 
 .calculations {
-  width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   background-color: var(--rightGreen);
-  padding: 40px;
+  padding: 48px;
+  border-radius: 15px;
 }
 
 .calculations .line {
   display: flex;
   justify-content: space-between;
+  color: var(--primaryColor);
+  width: 100%;
+  overflow: hidden;
+}
+
+.calculations .line #total, .calculations .line #per-person {
+  font-size: 48px;
 }
 
 .calculations .line .label {
   display: flex;
   flex-direction: column;
+  color: var(--white);
+  flex-shrink: 0;
+}
+
+.calculations .line .label span {
+  color: var(--color3);
+}
+
+.calculations .reset-btn {
+  border: none;
+  font-size: 20px;
+  height: 48px;
+  width: 100%;
+  background: var(--primaryColor);
+  color: var(--rightGreen);
+  border-radius: 5px;
+  font-weight: bold;
+  text-transform: uppercase;
 }
