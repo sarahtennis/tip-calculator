@@ -2,10 +2,12 @@ class Calculator {
   constructor() {
     this.calculations = {
       bill: 20,
-      tip: 15
+      tip: 15,
+      people: 3
     }
     this.bill = new Bill(this.calculate);
     this.tipPercent = new TipPercent(this.calculate);
+    this.people = new People(this.calculate);
     this.total = new Total(this.calculations);
   }
 
@@ -143,6 +145,12 @@ class TipPercent {
   }
 }
 
+class People {
+  constructor(calculate) {
+    this.calculate = calculate;
+  }
+}
+
 class Total {
   constructor(calculations) {
     this.calculations = calculations;
@@ -156,8 +164,8 @@ class Total {
     this.updateValues();
   }
 
-  updateValues(n = 1) {
-    const peopleCount = n;
+  updateValues() {
+    const peopleCount = this.calculations.people;
     const tipTotal = (this.calculations.bill * this.calculations.tip / 100);
 
     this.tipPerPerson.innerText = (tipTotal / peopleCount).toFixed(2);
