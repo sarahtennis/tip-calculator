@@ -1,14 +1,15 @@
+const INIT_CALCULATIONS = {
+  bill: 0,
+  tip: 5,
+  people: 1
+};
+
 class Calculator {
   constructor() {
-    this.calculations = {
-      bill: 20,
-      tip: 15,
-      people: 3
-    }
     this.bill = new Bill(this.calculate);
     this.tipPercent = new TipPercent(this.calculate);
     this.people = new People(this.calculate);
-    this.total = new Total(this.calculations);
+    this.total = new Total(INIT_CALCULATIONS);
   }
 
   calculate = (thingy) => {
@@ -94,15 +95,15 @@ class Bill {
 class TipPercent {
   constructor(calculate) {
     this.calculate = calculate;
-    this.percent = "15";
     this.selected = document.querySelector('.tip-container .selected');
     this.buttons = document.querySelectorAll('button.tip-option');
-    this.input = document.querySelector('input.tip-option');
+    this.tipInput = new IntegerInput('input.tip-option', this.onValidInput);
+
+    this.addTipInputEvents();
 
     this.buttons.forEach(button => {
       button.addEventListener('click', (event) => {
         const value = event.target.dataset.value;
-        this.percent = value;
         this.selected.classList.remove('selected');
         this.selected.classList.remove('active');
         this.selected = event.target;
@@ -114,41 +115,89 @@ class TipPercent {
         this.selected.classList.remove('active');
       });
     });
+  }
 
-    this.input.addEventListener('beforeinput', (e) => {
-      if (!parseInt(e.data) && e.data !== null && e.data != '0') {
-        e.preventDefault();
-      }
-    });
+  addTipInputEvents() {
+    if (!(this.tipInput && this.tipInput.input)) {
+      return;
+    }
 
-    this.input.addEventListener('input', () => {
-      if (this.input.value.length > 0) {
-        this.calculate({ tip: Number(this.input.value) });
-      }
-    });
-
-    this.input.addEventListener('focus', (e) => {
+    this.tipInput.input.addEventListener('focus', (e) => {
       this.selected.classList.remove('selected');
       this.selected = e.target;
       this.selected.classList.add('selected');
       this.selected.classList.remove('active');
-      if (this.input.value) {
-        this.calculate({ tip: Number(this.input.value) });
+      if (e.target.value) {
+        this.calculate({ tip: Number(e.target.value) });
       }
     });
 
-    this.input.addEventListener('blur', () => {
-      if (this.selected === this.input && this.input.value) {
-        this.input.classList.add('active');
+    this.tipInput.input.addEventListener('blur', (e) => {
+      if (this.selected === this.tipInput.input && this.tipInput.input.value) {
+        this.tipInput.input.classList.add('active');
       }
     });
+  }
+
+  onValidInput = (val) => {
+    this.calculate({ tip: val });
   }
 }
 
 class People {
   constructor(calculate) {
     this.calculate = calculate;
+    this.peopleInput = new IntegerInput('#people', this.onValidInput);
   }
+
+  onValidInput = (val) => {
+    this.calculate({ people: val });
+  }
+}
+
+class NumberInput {
+  constructor(selector) {
+    this.input = document.querySelector(selector);
+    this.initEvents();
+  }
+
+  onInput(e) { }
+  onBeforeInput(e) { }
+  onBlur(e) { }
+  onFocus(e) { }
+
+  initEvents() {
+    if (!this.input) {
+      return;
+    }
+    this.input.addEventListener('input', (e) => this.onInput(e));
+    this.input.addEventListener('beforeinput', (e) => this.onBeforeInput(e));
+    this.input.addEventListener('blur', (e) => this.onBlur(e));
+    this.input.addEventListener('focus', (e) => this.onFocus(e));
+  }
+}
+
+class IntegerInput extends NumberInput {
+  constructor(selector, onValidInput) {
+    super(selector);
+    this.onValidInput = typeof onValidInput === 'function' ? onValidInput : this.defaultOnValidInput;
+  }
+
+  onInput(e) {
+    const val = this.input.value;
+    const intVal = parseInt(val);
+    if (val.length > 0 && intVal !== NaN) {
+      this.onValidInput(intVal);
+    }
+  }
+
+  onBeforeInput(e) {
+    if (!parseInt(e.data) && e.data !== null && e.data != '0') {
+      e.preventDefault();
+    }
+  }
+
+  defaultOnValidInput() { }
 }
 
 class Total {
