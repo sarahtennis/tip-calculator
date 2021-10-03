@@ -1,0 +1,22 @@
+{
+  "name": "tip-calculator",
+  "version": "1.0.0",
+  "description": "Simple tip calculator by person",
+  "main": "main.js",
+  "scripts": {
+    "test": "semistandard"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sarahtennis/tip-calculator.git"
+  },
+  "author": "Sarah Tennis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sarahtennis/tip-calculator/issues"
+  },
+  "homepage": "https://github.com/sarahtennis/tip-calculator#readme",
+  "devDependencies": {
+    "semistandard": "^16.0.1"
+  }
+}

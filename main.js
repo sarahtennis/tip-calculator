@@ -1,21 +1,25 @@
+const INIT_CALCULATIONS = {
+  bill: 0,
+  tip: 5,
+  people: 1
+};
+
 class Calculator {
-  constructor() {
-    this.calculations = {
-      bill: 20,
-      tip: 15
-    }
+  constructor () {
+    this.calculate = (thingy) => {
+      this.total.setCalculations(thingy);
+    };
     this.bill = new Bill(this.calculate);
     this.tipPercent = new TipPercent(this.calculate);
-    this.total = new Total(this.calculations);
+    this.people = new People(this.calculate);
+    this.total = new Total(INIT_CALCULATIONS);
   }
 
-  calculate = (thingy) => {
-    this.total.setCalculations(thingy);
-  }
+  init () { }
 }
 
 class Bill {
-  constructor(calculate) {
+  constructor (calculate) {
     this.calculate = calculate;
     this.validationMessage = '';
     this.showInvalidState = false;
@@ -65,7 +69,7 @@ class Bill {
     });
   }
 
-  validInput() {
+  validInput () {
     const value = parseFloat(this.input.value);
     if (value) {
       this.showInvalidState = false;
@@ -79,7 +83,7 @@ class Bill {
     this.updateValidationMessage();
   }
 
-  updateValidationMessage() {
+  updateValidationMessage () {
     this.inputValidation.innerHTML = this.validationMessage;
     if (this.validationMessage) {
       this.input.classList.add('invalid-input');
@@ -90,17 +94,17 @@ class Bill {
 }
 
 class TipPercent {
-  constructor(calculate) {
+  constructor (calculate) {
     this.calculate = calculate;
-    this.percent = "15";
     this.selected = document.querySelector('.tip-container .selected');
     this.buttons = document.querySelectorAll('button.tip-option');
-    this.input = document.querySelector('input.tip-option');
+    this.tipInput = new IntegerInput('input.tip-option', this.onValidInput);
+
+    this.addTipInputEvents();
 
     this.buttons.forEach(button => {
       button.addEventListener('click', (event) => {
         const value = event.target.dataset.value;
-        this.percent = value;
         this.selected.classList.remove('selected');
         this.selected.classList.remove('active');
         this.selected = event.target;
@@ -113,51 +117,108 @@ class TipPercent {
       });
     });
 
-    this.input.addEventListener('beforeinput', (e) => {
-      if (!parseInt(e.data) && e.data !== null && e.data != '0') {
-        e.preventDefault();
-      }
-    });
+    this.onValidInput = (val) => {
+      this.calculate({ tip: val });
+    };
+  }
 
-    this.input.addEventListener('input', () => {
-      if (this.input.value.length > 0) {
-        this.calculate({ tip: Number(this.input.value) });
-      }
-    });
+  addTipInputEvents () {
+    if (!(this.tipInput && this.tipInput.input)) {
+      return;
+    }
 
-    this.input.addEventListener('focus', (e) => {
+    this.tipInput.input.addEventListener('focus', (e) => {
       this.selected.classList.remove('selected');
       this.selected = e.target;
       this.selected.classList.add('selected');
       this.selected.classList.remove('active');
-      if (this.input.value) {
-        this.calculate({ tip: Number(this.input.value) });
+      if (e.target.value) {
+        this.calculate({ tip: Number(e.target.value) });
       }
     });
 
-    this.input.addEventListener('blur', () => {
-      if (this.selected === this.input && this.input.value) {
-        this.input.classList.add('active');
+    this.tipInput.input.addEventListener('blur', (e) => {
+      if (this.selected === this.tipInput.input && this.tipInput.input.value) {
+        this.tipInput.input.classList.add('active');
       }
     });
   }
 }
 
+class People {
+  constructor (calculate) {
+    this.calculate = calculate;
+    this.peopleInput = new IntegerInput('#people', this.onValidInput);
+    this.onValidInput = (val) => {
+      this.calculate({ people: val });
+    };
+  }
+
+  // onValidInput = (val) => {
+  //   this.calculate({ people: val });
+  // }
+}
+
+class NumberInput {
+  constructor (selector) {
+    this.input = document.querySelector(selector);
+    this.initEvents();
+  }
+
+  onInput (e) { }
+  onBeforeInput (e) { }
+  onBlur (e) { }
+  onFocus (e) { }
+
+  initEvents () {
+    if (!this.input) {
+      return;
+    }
+    this.input.addEventListener('input', (e) => this.onInput(e));
+    this.input.addEventListener('beforeinput', (e) => this.onBeforeInput(e));
+    this.input.addEventListener('blur', (e) => this.onBlur(e));
+    this.input.addEventListener('focus', (e) => this.onFocus(e));
+  }
+}
+
+class IntegerInput extends NumberInput {
+  constructor (selector, onValidInput) {
+    super(selector);
+    this.onValidInput = typeof onValidInput === 'function' ? onValidInput : this.defaultOnValidInput;
+  }
+
+  onInput (e) {
+    const val = this.input.value;
+    const intVal = parseInt(val);
+    if (val.length > 0 && !isNaN(intVal)) {
+      this.onValidInput(intVal);
+    }
+  }
+
+  onBeforeInput (e) {
+    if (!parseInt(e.data) && e.data !== null && e.data !== '0') {
+      e.preventDefault();
+    }
+  }
+
+  defaultOnValidInput () { }
+}
+
 class Total {
-  constructor(calculations) {
+  constructor (calculations) {
     this.calculations = calculations;
     this.tipPerPerson = document.querySelector('#tip-per-person');
     this.totalPerPerson = document.querySelector('#total-per-person');
     this.updateValues();
   }
 
-  setCalculations(newCalculations) {
+  setCalculations (newCalculations) {
     this.calculations = { ...this.calculations, ...newCalculations };
     this.updateValues();
   }
 
-  updateValues(n = 1) {
-    const peopleCount = n;
+  updateValues () {
+    const peopleCount = this.calculations.people;
     const tipTotal = (this.calculations.bill * this.calculations.tip / 100);
 
     this.tipPerPerson.innerText = (tipTotal / peopleCount).toFixed(2);
@@ -165,4 +226,5 @@ class Total {
   }
 }
 
-new Calculator();
+const calculator = new Calculator();
+calculator.init();
