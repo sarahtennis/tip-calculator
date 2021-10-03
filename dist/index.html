@@ -14,57 +14,59 @@
 
     <title>Frontend Mentor | Tip calculator app</title>
   </head>
-  <body style="opacity: 0; transition: opacity 2s ease; background: #C5E4E7;">
-    <img class="logo" alt="Splitter logo" src="./SPLITTER.svg" />
-    <div class="content-container">
-      <div class="calculator-container">
-        <div class="form">
-          <div class="label-line">
-            <label for="bill">Bill</label>
-            <span class="validation bill-validation"></span>
-          </div>
-          <div class="bill-input-wrapper">
-            <input
-              class="icon-input"
-              id="bill"
-              name="bill"
-              type="text"
-            />
-          </div>
-
-          <label for="percent">Select Tip %</label>
-          <div class="tip-container">
-            <button class="tip-option" data-value="5">5%</button>
-            <button class="tip-option" data-value="10">10%</button>
-            <button class="tip-option" data-value="15">15%</button>
-            <button class="tip-option" data-value="25">25%</button>
-            <button class="tip-option" data-value="50">50%</button>
-            <input
-              class="tip-option"
-              type="text"
-              placeholder="Custom"
-              value=""
-            />
-          </div>
-
-          <label>Number of People</label>
-          <div class="people-input-wrapper">
-            <input class="icon-input" id="people" type="text" />
-          </div>
-        </div>
-
-        <div class="calculations">
-          <div class="calculations-lines">
-            <div class="line">
-              <div class="label">Tip Amount<span>/ person</span></div>
-              <div id="tip-per-person">$0.00</div>
+  <body style="background: #C5E4E7;">
+    <div class="page-container" style="opacity: 0; transition: opacity 2s ease;">
+      <img class="logo" alt="Splitter logo" src="./SPLITTER.svg" />
+      <div class="content-container">
+        <div class="calculator-container">
+          <div class="form">
+            <div class="label-line">
+              <label for="bill">Bill</label>
+              <span class="validation bill-validation"></span>
             </div>
-            <div class="line">
-              <div class="label">Total<span>/ person</span></div>
-              <div id="total-per-person">$0.00</div>
+            <div class="bill-input-wrapper">
+              <input
+                class="icon-input"
+                id="bill"
+                name="bill"
+                type="text"
+              />
+            </div>
+
+            <label for="percent">Select Tip %</label>
+            <div class="tip-container">
+              <button class="tip-option" data-value="5">5%</button>
+              <button class="tip-option" data-value="10">10%</button>
+              <button class="tip-option" data-value="15">15%</button>
+              <button class="tip-option" data-value="25">25%</button>
+              <button class="tip-option" data-value="50">50%</button>
+              <input
+                class="tip-option"
+                type="text"
+                placeholder="Custom"
+                value=""
+              />
+            </div>
+
+            <label>Number of People</label>
+            <div class="people-input-wrapper">
+              <input class="icon-input" id="people" type="text" />
             </div>
           </div>
-          <button onsubmit="e.preventDefault();" class="reset-btn">Reset</button>
+
+          <div class="calculations">
+            <div class="calculations-lines">
+              <div class="line">
+                <div class="label">Tip Amount<span>/ person</span></div>
+                <div id="tip-per-person">$0.00</div>
+              </div>
+              <div class="line">
+                <div class="label">Total<span>/ person</span></div>
+                <div id="total-per-person">$0.00</div>
+              </div>
+            </div>
+            <button onsubmit="e.preventDefault();" class="reset-btn">Reset</button>
+          </div>
         </div>
       </div>
     </div>

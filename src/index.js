@@ -4,6 +4,15 @@ import TipPercent from './components/TipPercent';
 import People from './components/People';
 import Total from './components/Total';
 
+if (document.fonts) {
+  document.fonts.ready.then(() => {
+    document.querySelector('.page-container').style.opacity = 1;
+  });
+} else {
+  // For IE, will potentially show font flash
+  document.querySelector('.page-container').style.opacity = 1;
+}
+
 const INIT_CALCULATIONS = {
   bill: null,
   tip: null,

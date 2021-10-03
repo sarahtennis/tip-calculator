@@ -27,12 +27,16 @@
 
 body {
   height: 100vh;
-  background-color: var(--mainBgColor);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+}
+
+div.page-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  opacity: 1 !important;
 }
 
 label {
@@ -221,4 +225,20 @@ img.logo {
 
 .calculations .reset-btn:hover {
   cursor: pointer;
+}
+
+@media (max-width: 940px) {
+  .calculator-container {
+    max-width: 375px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    grid-row-gap: 32px;
+  }
+
+  .tip-container {
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-row-gap: 16px;
+    grid-column-gap: 16px;
+  }
 }
