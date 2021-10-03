@@ -15,13 +15,14 @@ class Calculator {
       this.people.onReset();
       this.calculate(INIT_CALCULATIONS);
     };
+  }
+
+  init () {
     this.bill = new Bill(this.calculate);
     this.tipPercent = new TipPercent(this.calculate);
     this.people = new People(this.calculate);
     this.total = new Total(INIT_CALCULATIONS, this.reset);
   }
-
-  init () { }
 }
 
 class Bill {
@@ -192,7 +193,7 @@ class Total {
     this.initResetEvents();
   }
 
-  initResetEvents() {
+  initResetEvents () {
     if (!this.resetButton) {
       return;
     }
