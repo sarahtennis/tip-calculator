@@ -5,20 +5,21 @@ const INIT_CALCULATIONS = {
 };
 
 class Calculator {
-  constructor() {
+  constructor () {
+    this.calculate = (thingy) => {
+      this.total.setCalculations(thingy);
+    };
     this.bill = new Bill(this.calculate);
     this.tipPercent = new TipPercent(this.calculate);
     this.people = new People(this.calculate);
     this.total = new Total(INIT_CALCULATIONS);
   }
 
-  calculate = (thingy) => {
-    this.total.setCalculations(thingy);
-  }
+  init () { }
 }
 
 class Bill {
-  constructor(calculate) {
+  constructor (calculate) {
     this.calculate = calculate;
     this.validationMessage = '';
     this.showInvalidState = false;
@@ -68,7 +69,7 @@ class Bill {
     });
   }
 
-  validInput() {
+  validInput () {
     const value = parseFloat(this.input.value);
     if (value) {
       this.showInvalidState = false;
@@ -82,7 +83,7 @@ class Bill {
     this.updateValidationMessage();
   }
 
-  updateValidationMessage() {
+  updateValidationMessage () {
     this.inputValidation.innerHTML = this.validationMessage;
     if (this.validationMessage) {
       this.input.classList.add('invalid-input');
@@ -93,7 +94,7 @@ class Bill {
 }
 
 class TipPercent {
-  constructor(calculate) {
+  constructor (calculate) {
     this.calculate = calculate;
     this.selected = document.querySelector('.tip-container .selected');
     this.buttons = document.querySelectorAll('button.tip-option');
@@ -115,9 +116,13 @@ class TipPercent {
         this.selected.classList.remove('active');
       });
     });
+
+    this.onValidInput = (val) => {
+      this.calculate({ tip: val });
+    };
   }
 
-  addTipInputEvents() {
+  addTipInputEvents () {
     if (!(this.tipInput && this.tipInput.input)) {
       return;
     }
@@ -138,35 +143,34 @@ class TipPercent {
       }
     });
   }
-
-  onValidInput = (val) => {
-    this.calculate({ tip: val });
-  }
 }
 
 class People {
-  constructor(calculate) {
+  constructor (calculate) {
     this.calculate = calculate;
     this.peopleInput = new IntegerInput('#people', this.onValidInput);
+    this.onValidInput = (val) => {
+      this.calculate({ people: val });
+    };
   }
 
-  onValidInput = (val) => {
-    this.calculate({ people: val });
-  }
+  // onValidInput = (val) => {
+  //   this.calculate({ people: val });
+  // }
 }
 
 class NumberInput {
-  constructor(selector) {
+  constructor (selector) {
     this.input = document.querySelector(selector);
     this.initEvents();
   }
 
-  onInput(e) { }
-  onBeforeInput(e) { }
-  onBlur(e) { }
-  onFocus(e) { }
+  onInput (e) { }
+  onBeforeInput (e) { }
+  onBlur (e) { }
+  onFocus (e) { }
 
-  initEvents() {
+  initEvents () {
     if (!this.input) {
       return;
     }
@@ -178,42 +182,42 @@ class NumberInput {
 }
 
 class IntegerInput extends NumberInput {
-  constructor(selector, onValidInput) {
+  constructor (selector, onValidInput) {
     super(selector);
     this.onValidInput = typeof onValidInput === 'function' ? onValidInput : this.defaultOnValidInput;
   }
 
-  onInput(e) {
+  onInput (e) {
     const val = this.input.value;
     const intVal = parseInt(val);
-    if (val.length > 0 && intVal !== NaN) {
+    if (val.length > 0 && !isNaN(intVal)) {
       this.onValidInput(intVal);
     }
   }
 
-  onBeforeInput(e) {
-    if (!parseInt(e.data) && e.data !== null && e.data != '0') {
+  onBeforeInput (e) {
+    if (!parseInt(e.data) && e.data !== null && e.data !== '0') {
       e.preventDefault();
     }
   }
 
-  defaultOnValidInput() { }
+  defaultOnValidInput () { }
 }
 
 class Total {
-  constructor(calculations) {
+  constructor (calculations) {
     this.calculations = calculations;
     this.tipPerPerson = document.querySelector('#tip-per-person');
     this.totalPerPerson = document.querySelector('#total-per-person');
     this.updateValues();
   }
 
-  setCalculations(newCalculations) {
+  setCalculations (newCalculations) {
     this.calculations = { ...this.calculations, ...newCalculations };
     this.updateValues();
   }
 
-  updateValues() {
+  updateValues () {
     const peopleCount = this.calculations.people;
     const tipTotal = (this.calculations.bill * this.calculations.tip / 100);
 
@@ -222,4 +226,5 @@ class Total {
   }
 }
 
-new Calculator();
+const calculator = new Calculator();
+calculator.init();
