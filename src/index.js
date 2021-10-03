@@ -1,3 +1,5 @@
+import './styles/main.css';
+
 const INIT_CALCULATIONS = {
   bill: null,
   tip: null,
