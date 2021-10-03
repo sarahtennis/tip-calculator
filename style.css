@@ -217,3 +217,7 @@ img.logo {
   font-weight: bold;
   text-transform: uppercase;
 }
+
+.calculations .reset-btn:hover {
+  cursor: pointer;
+}

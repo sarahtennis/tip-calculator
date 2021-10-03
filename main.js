@@ -1,7 +1,7 @@
 const INIT_CALCULATIONS = {
-  bill: 0,
-  tip: 5,
-  people: 1
+  bill: null,
+  tip: null,
+  people: null
 };
 
 class Calculator {
@@ -9,10 +9,16 @@ class Calculator {
     this.calculate = (thingy) => {
       this.total.setCalculations(thingy);
     };
+    this.reset = () => {
+      this.bill.onReset();
+      this.tipPercent.onReset();
+      this.people.onReset();
+      this.calculate(INIT_CALCULATIONS);
+    };
     this.bill = new Bill(this.calculate);
     this.tipPercent = new TipPercent(this.calculate);
     this.people = new People(this.calculate);
-    this.total = new Total(INIT_CALCULATIONS);
+    this.total = new Total(INIT_CALCULATIONS, this.reset);
   }
 
   init () { }
@@ -69,6 +75,10 @@ class Bill {
     });
   }
 
+  onReset () {
+    this.input.value = '';
+  }
+
   validInput () {
     const value = parseFloat(this.input.value);
     if (value) {
@@ -96,6 +106,9 @@ class Bill {
 class TipPercent {
   constructor (calculate) {
     this.calculate = calculate;
+    this.onValidInput = (val) => {
+      this.calculate({ tip: val });
+    };
     this.selected = document.querySelector('.tip-container .selected');
     this.buttons = document.querySelectorAll('button.tip-option');
     this.tipInput = new IntegerInput('input.tip-option', this.onValidInput);
@@ -105,21 +118,29 @@ class TipPercent {
     this.buttons.forEach(button => {
       button.addEventListener('click', (event) => {
         const value = event.target.dataset.value;
-        this.selected.classList.remove('selected');
-        this.selected.classList.remove('active');
+        if (this.selected) {
+          this.selected.classList.remove('selected');
+          this.selected.classList.remove('active');
+        }
         this.selected = event.target;
         this.selected.classList.add('selected');
         this.calculate({ tip: Number(value) });
       });
 
       button.addEventListener('focus', (e) => {
-        this.selected.classList.remove('active');
+        if (this.selected) {
+          this.selected.classList.remove('active');
+        }
       });
     });
+  }
 
-    this.onValidInput = (val) => {
-      this.calculate({ tip: val });
-    };
+  onReset () {
+    if (this.selected) {
+      this.selected.classList.remove('selected');
+      this.selected.classList.remove('active');
+    }
+    this.tipInput.input.value = '';
   }
 
   addTipInputEvents () {
@@ -128,7 +149,9 @@ class TipPercent {
     }
 
     this.tipInput.input.addEventListener('focus', (e) => {
-      this.selected.classList.remove('selected');
+      if (this.selected) {
+        this.selected.classList.remove('selected');
+      }
       this.selected = e.target;
       this.selected.classList.add('selected');
       this.selected.classList.remove('active');
@@ -148,15 +171,14 @@ class TipPercent {
 class People {
   constructor (calculate) {
     this.calculate = calculate;
-    this.peopleInput = new IntegerInput('#people', this.onValidInput);
     this.onValidInput = (val) => {
       this.calculate({ people: val });
     };
+    this.peopleInput = new IntegerInput('#people', this.onValidInput);
+    this.onReset = () => {
+      this.peopleInput.input.value = '';
+    };
   }
-
-  // onValidInput = (val) => {
-  //   this.calculate({ people: val });
-  // }
 }
 
 class NumberInput {
@@ -185,14 +207,13 @@ class IntegerInput extends NumberInput {
   constructor (selector, onValidInput) {
     super(selector);
     this.onValidInput = typeof onValidInput === 'function' ? onValidInput : this.defaultOnValidInput;
-  }
-
-  onInput (e) {
-    const val = this.input.value;
-    const intVal = parseInt(val);
-    if (val.length > 0 && !isNaN(intVal)) {
-      this.onValidInput(intVal);
-    }
+    this.onInput = (e) => {
+      const val = this.input.value;
+      const intVal = parseInt(val);
+      if (val.length > 0 && !isNaN(intVal)) {
+        this.onValidInput(intVal);
+      }
+    };
   }
 
   onBeforeInput (e) {
@@ -201,15 +222,28 @@ class IntegerInput extends NumberInput {
     }
   }
 
-  defaultOnValidInput () { }
+  // No action on valid input
+  defaultOnValidInput () {}
 }
 
 class Total {
-  constructor (calculations) {
+  constructor (calculations, reset) {
     this.calculations = calculations;
+    this.reset = reset;
     this.tipPerPerson = document.querySelector('#tip-per-person');
     this.totalPerPerson = document.querySelector('#total-per-person');
+    this.resetButton = document.querySelector('.reset-btn');
     this.updateValues();
+    this.initResetEvents();
+  }
+
+  initResetEvents() {
+    if (!this.resetButton) {
+      return;
+    }
+    this.resetButton.addEventListener('click', (e) => {
+      this.reset();
+    });
   }
 
   setCalculations (newCalculations) {
@@ -218,11 +252,15 @@ class Total {
   }
 
   updateValues () {
-    const peopleCount = this.calculations.people;
-    const tipTotal = (this.calculations.bill * this.calculations.tip / 100);
-
-    this.tipPerPerson.innerText = (tipTotal / peopleCount).toFixed(2);
-    this.totalPerPerson.innerText = ((this.calculations.bill + tipTotal) / peopleCount).toFixed(2);
+    const { bill, tip, people } = this.calculations;
+    if (bill === null || tip === null || !people) {
+      this.tipPerPerson.innerText = Number(0).toFixed(2);
+      this.totalPerPerson.innerText = Number(0).toFixed(2);
+      return;
+    }
+    const tipTotal = (bill * tip / 100);
+    this.tipPerPerson.innerText = (tipTotal / people).toFixed(2);
+    this.totalPerPerson.innerText = ((bill + tipTotal) / people).toFixed(2);
   }
 }
 
