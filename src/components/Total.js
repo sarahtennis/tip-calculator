@@ -27,11 +27,15 @@ export default class Total {
     const { bill, tip, people } = this.calculations;
     if (bill === null || tip === null || !people) {
       this.tipPerPerson.innerText = Number(0).toFixed(2);
+      this.tipPerPerson.setAttribute('title', Number(0).toFixed(2));
       this.totalPerPerson.innerText = Number(0).toFixed(2);
+      this.totalPerPerson.setAttribute('title', Number(0).toFixed(2));
       return;
     }
     const tipTotal = (bill * tip / 100);
     this.tipPerPerson.innerText = (tipTotal / people).toFixed(2);
+    this.tipPerPerson.setAttribute('title', (tipTotal / people).toFixed(2));
     this.totalPerPerson.innerText = ((bill + tipTotal) / people).toFixed(2);
+    this.totalPerPerson.setAttribute('title', ((bill + tipTotal) / people).toFixed(2));
   }
 }
