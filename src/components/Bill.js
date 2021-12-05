@@ -51,6 +51,9 @@ export default class Bill {
 
   onReset () {
     this.input.value = '';
+    this.validationMessage = '';
+    this.showInvalidState = false;
+    this.updateValidationMessage();
   }
 
   validInput () {

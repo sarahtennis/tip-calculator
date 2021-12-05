@@ -33,14 +33,10 @@ class Calculator {
   }
 
   init () {
-    // this.calcEl = document.querySelector('.calculator-container');
     this.bill = new Bill(this.calculate);
     this.tipPercent = new TipPercent(this.calculate);
     this.people = new People(this.calculate);
     this.total = new Total(INIT_CALCULATIONS, this.reset);
-    // this.calcEl.onload(() => {
-    //   this.calcEl.
-    // });
   }
 }
 

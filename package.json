@@ -5,7 +5,7 @@
   "main": "index.js",
   "private": true,
   "scripts": {
-    "test": "semistandard",
+    "test": "semistandard --fix",
     "build": "webpack",
     "dev-server": "webpack serve"
   },
