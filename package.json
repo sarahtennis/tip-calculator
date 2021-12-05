@@ -2,9 +2,12 @@
   "name": "tip-calculator",
   "version": "1.0.0",
   "description": "Simple tip calculator by person",
-  "main": "main.js",
+  "main": "index.js",
+  "private": true,
   "scripts": {
-    "test": "semistandard"
+    "test": "semistandard",
+    "build": "webpack",
+    "dev-server": "webpack serve"
   },
   "repository": {
     "type": "git",
@@ -17,6 +20,11 @@
   },
   "homepage": "https://github.com/sarahtennis/tip-calculator#readme",
   "devDependencies": {
-    "semistandard": "^16.0.1"
+    "css-loader": "^6.3.0",
+    "semistandard": "^16.0.1",
+    "style-loader": "^3.3.0",
+    "webpack": "^5.56.0",
+    "webpack-cli": "^4.8.0",
+    "webpack-dev-server": "^4.3.0"
   }
 }
