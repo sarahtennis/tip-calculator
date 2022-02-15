@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- displays site properly based on user's device -->
+
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="./favicon-32x32.png"
+    />
+
+    <title>Frontend Mentor | Tip calculator app</title>
+  </head>
+  <body style="background: #C5E4E7;">
+    <div class="page-container" style="opacity: 0; transition: opacity 2s ease;">
+      <div class="spacer"></div>
+      <div class="logo-container">
+        <img class="logo" alt="Splitter logo" src="./SPLITTER.svg" />
+      </div>
+      <div class="content-container">
+        <div class="calculator-container">
+          <div class="form">
+            <div class="label-line">
+              <label for="bill">Bill</label>
+              <span class="validation bill-validation"></span>
+            </div>
+            <div class="bill-input-wrapper">
+              <input
+                class="icon-input"
+                id="bill"
+                name="bill"
+                type="text"
+                placeholder="0"
+              />
+            </div>
+
+            <div class="label-line">
+              <label for="percent">Select Tip %</label>
+            </div>
+            <div class="tip-container">
+              <button class="tip-option" data-value="5">5%</button>
+              <button class="tip-option" data-value="10">10%</button>
+              <button class="tip-option" data-value="15">15%</button>
+              <button class="tip-option" data-value="25">25%</button>
+              <button class="tip-option" data-value="50">50%</button>
+              <input
+                class="tip-option"
+                type="text"
+                placeholder="Custom"
+                value=""
+              />
+            </div>
+
+            <div class="label-line">
+              <label>Number of People</label>
+              <span class="validation people-validation"></span>
+            </div>
+            <div class="people-input-wrapper">
+              <input class="icon-input" id="people" type="text" placeholder="0"/>
+            </div>
+          </div>
+
+          <div class="calculations">
+            <div class="calculations-lines">
+              <div class="line">
+                <div class="label">Tip Amount<span>/ person</span></div>
+                <div class="value" id="tip-per-person">$0.00</div>
+              </div>
+              <div class="line">
+                <div class="label">Total<span>/ person</span></div>
+                <div class="value" id="total-per-person">$0.00</div>
+              </div>
+            </div>
+            <button onsubmit="e.preventDefault();" class="reset-btn">Reset</button>
+          </div>
+        </div>
+      </div>
+      <div class="spacer"></div>
+    </div>
+  </body>
+  <script src="bundle.js"></script>
+</html>
